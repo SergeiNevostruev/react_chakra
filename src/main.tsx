@@ -10,6 +10,13 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+import { client } from "./client/sdk.gen";
+
+client.setConfig({
+  // baseURL: import.meta.env.BACKEND_HOST,
+  baseUrl: "https://petstore.swagger.io/v2",
+});
+
 // Create a new router instance
 const router = createRouter({ routeTree });
 const queryClient = new QueryClient();

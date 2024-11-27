@@ -3,18 +3,17 @@
 import type { OptionsLegacyParser } from '../client';
 import { queryOptions, type UseMutationOptions, type DefaultError } from '@tanstack/react-query';
 import type { UploadFileData, UploadFileError, UploadFileResponse, AddPetData, UpdatePetData, FindPetsByStatusData, FindPetsByTagsData, GetPetByIdData, UpdatePetWithFormData, DeletePetData, PlaceOrderData, PlaceOrderError, PlaceOrderResponse, GetOrderByIdData, DeleteOrderData, CreateUsersWithListInputData, CreateUsersWithListInputError, CreateUsersWithListInputResponse, GetUserByNameData, UpdateUserData, DeleteUserData, LoginUserData, CreateUsersWithArrayInputData, CreateUsersWithArrayInputError, CreateUsersWithArrayInputResponse, CreateUserData, CreateUserError, CreateUserResponse } from '../types.gen';
-import type { AxiosError } from 'axios';
 import { client, uploadFile, addPet, updatePet, findPetsByStatus, findPetsByTags, getPetById, updatePetWithForm, deletePet, getInventory, placeOrder, getOrderById, deleteOrder, createUsersWithListInput, getUserByName, updateUser, deleteUser, loginUser, logoutUser, createUsersWithArrayInput, createUser } from '../sdk.gen';
 
 type QueryKey<TOptions extends OptionsLegacyParser> = [
-    Pick<TOptions, 'baseURL' | 'body' | 'headers' | 'path' | 'query'> & {
+    Pick<TOptions, 'baseUrl' | 'body' | 'headers' | 'path' | 'query'> & {
         _id: string;
         _infinite?: boolean;
     }
 ];
 
 const createQueryKey = <TOptions extends OptionsLegacyParser>(id: string, options?: TOptions, infinite?: boolean): QueryKey<TOptions>[0] => {
-    const params: QueryKey<TOptions>[0] = { _id: id, baseURL: (options?.client ?? client).getConfig().baseURL } as QueryKey<TOptions>[0];
+    const params: QueryKey<TOptions>[0] = { _id: id, baseUrl: (options?.client ?? client).getConfig().baseUrl } as QueryKey<TOptions>[0];
     if (infinite) {
         params._infinite = infinite;
     }
@@ -53,7 +52,7 @@ export const uploadFileOptions = (options: OptionsLegacyParser<UploadFileData>) 
 };
 
 export const uploadFileMutation = (options?: Partial<OptionsLegacyParser<UploadFileData>>) => {
-    const mutationOptions: UseMutationOptions<UploadFileResponse, AxiosError<UploadFileError>, OptionsLegacyParser<UploadFileData>> = {
+    const mutationOptions: UseMutationOptions<UploadFileResponse, UploadFileError, OptionsLegacyParser<UploadFileData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await uploadFile({
                 ...options,
@@ -86,7 +85,7 @@ export const addPetOptions = (options: OptionsLegacyParser<AddPetData>) => {
 };
 
 export const addPetMutation = (options?: Partial<OptionsLegacyParser<AddPetData>>) => {
-    const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, OptionsLegacyParser<AddPetData>> = {
+    const mutationOptions: UseMutationOptions<void, DefaultError, OptionsLegacyParser<AddPetData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await addPet({
                 ...options,
@@ -100,7 +99,7 @@ export const addPetMutation = (options?: Partial<OptionsLegacyParser<AddPetData>
 };
 
 export const updatePetMutation = (options?: Partial<OptionsLegacyParser<UpdatePetData>>) => {
-    const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, OptionsLegacyParser<UpdatePetData>> = {
+    const mutationOptions: UseMutationOptions<void, DefaultError, OptionsLegacyParser<UpdatePetData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await updatePet({
                 ...options,
@@ -190,7 +189,7 @@ export const updatePetWithFormOptions = (options: OptionsLegacyParser<UpdatePetW
 };
 
 export const updatePetWithFormMutation = (options?: Partial<OptionsLegacyParser<UpdatePetWithFormData>>) => {
-    const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, OptionsLegacyParser<UpdatePetWithFormData>> = {
+    const mutationOptions: UseMutationOptions<void, DefaultError, OptionsLegacyParser<UpdatePetWithFormData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await updatePetWithForm({
                 ...options,
@@ -204,7 +203,7 @@ export const updatePetWithFormMutation = (options?: Partial<OptionsLegacyParser<
 };
 
 export const deletePetMutation = (options?: Partial<OptionsLegacyParser<DeletePetData>>) => {
-    const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, OptionsLegacyParser<DeletePetData>> = {
+    const mutationOptions: UseMutationOptions<void, DefaultError, OptionsLegacyParser<DeletePetData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await deletePet({
                 ...options,
@@ -256,7 +255,7 @@ export const placeOrderOptions = (options: OptionsLegacyParser<PlaceOrderData>) 
 };
 
 export const placeOrderMutation = (options?: Partial<OptionsLegacyParser<PlaceOrderData>>) => {
-    const mutationOptions: UseMutationOptions<PlaceOrderResponse, AxiosError<PlaceOrderError>, OptionsLegacyParser<PlaceOrderData>> = {
+    const mutationOptions: UseMutationOptions<PlaceOrderResponse, PlaceOrderError, OptionsLegacyParser<PlaceOrderData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await placeOrder({
                 ...options,
@@ -289,7 +288,7 @@ export const getOrderByIdOptions = (options: OptionsLegacyParser<GetOrderByIdDat
 };
 
 export const deleteOrderMutation = (options?: Partial<OptionsLegacyParser<DeleteOrderData>>) => {
-    const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, OptionsLegacyParser<DeleteOrderData>> = {
+    const mutationOptions: UseMutationOptions<void, DefaultError, OptionsLegacyParser<DeleteOrderData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await deleteOrder({
                 ...options,
@@ -322,7 +321,7 @@ export const createUsersWithListInputOptions = (options: OptionsLegacyParser<Cre
 };
 
 export const createUsersWithListInputMutation = (options?: Partial<OptionsLegacyParser<CreateUsersWithListInputData>>) => {
-    const mutationOptions: UseMutationOptions<CreateUsersWithListInputResponse, AxiosError<CreateUsersWithListInputError>, OptionsLegacyParser<CreateUsersWithListInputData>> = {
+    const mutationOptions: UseMutationOptions<CreateUsersWithListInputResponse, CreateUsersWithListInputError, OptionsLegacyParser<CreateUsersWithListInputData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await createUsersWithListInput({
                 ...options,
@@ -355,7 +354,7 @@ export const getUserByNameOptions = (options: OptionsLegacyParser<GetUserByNameD
 };
 
 export const updateUserMutation = (options?: Partial<OptionsLegacyParser<UpdateUserData>>) => {
-    const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, OptionsLegacyParser<UpdateUserData>> = {
+    const mutationOptions: UseMutationOptions<void, DefaultError, OptionsLegacyParser<UpdateUserData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await updateUser({
                 ...options,
@@ -369,7 +368,7 @@ export const updateUserMutation = (options?: Partial<OptionsLegacyParser<UpdateU
 };
 
 export const deleteUserMutation = (options?: Partial<OptionsLegacyParser<DeleteUserData>>) => {
-    const mutationOptions: UseMutationOptions<void, AxiosError<DefaultError>, OptionsLegacyParser<DeleteUserData>> = {
+    const mutationOptions: UseMutationOptions<void, DefaultError, OptionsLegacyParser<DeleteUserData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await deleteUser({
                 ...options,
@@ -440,7 +439,7 @@ export const createUsersWithArrayInputOptions = (options: OptionsLegacyParser<Cr
 };
 
 export const createUsersWithArrayInputMutation = (options?: Partial<OptionsLegacyParser<CreateUsersWithArrayInputData>>) => {
-    const mutationOptions: UseMutationOptions<CreateUsersWithArrayInputResponse, AxiosError<CreateUsersWithArrayInputError>, OptionsLegacyParser<CreateUsersWithArrayInputData>> = {
+    const mutationOptions: UseMutationOptions<CreateUsersWithArrayInputResponse, CreateUsersWithArrayInputError, OptionsLegacyParser<CreateUsersWithArrayInputData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await createUsersWithArrayInput({
                 ...options,
@@ -473,7 +472,7 @@ export const createUserOptions = (options: OptionsLegacyParser<CreateUserData>) 
 };
 
 export const createUserMutation = (options?: Partial<OptionsLegacyParser<CreateUserData>>) => {
-    const mutationOptions: UseMutationOptions<CreateUserResponse, AxiosError<CreateUserError>, OptionsLegacyParser<CreateUserData>> = {
+    const mutationOptions: UseMutationOptions<CreateUserResponse, CreateUserError, OptionsLegacyParser<CreateUserData>> = {
         mutationFn: async (localOptions) => {
             const { data } = await createUser({
                 ...options,

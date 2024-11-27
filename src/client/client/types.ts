@@ -1,35 +1,41 @@
 import type {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-  AxiosStatic,
-  CreateAxiosDefaults,
-} from 'axios';
-
-import type { BodySerializer } from './utils';
+  BodySerializer,
+  Middleware,
+  QuerySerializer,
+  QuerySerializerOptions,
+} from './utils';
 
 type OmitKeys<T, K> = Pick<T, Exclude<keyof T, K>>;
 
 export interface Config<ThrowOnError extends boolean = boolean>
-  extends Omit<CreateAxiosDefaults, 'headers'> {
+  extends Omit<RequestInit, 'body' | 'headers' | 'method'> {
   /**
-   * Axios implementation. You can use this option to provide a custom
-   * Axios instance.
-   * @default axios
+   * Base URL for all requests made by this client.
+   * @default ''
    */
-  axios?: AxiosStatic;
+  baseUrl?: string;
   /**
    * Any body that you want to add to your request.
    *
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#body}
    */
-  body?: unknown;
+  body?:
+    | RequestInit['body']
+    | Record<string, unknown>
+    | Array<Record<string, unknown>>
+    | Array<unknown>
+    | number;
   /**
    * A function for serializing request body parameter. By default,
    * {@link JSON.stringify()} will be used.
    */
   bodySerializer?: BodySerializer;
+  /**
+   * Fetch API implementation. You can use this option to provide a custom
+   * fetch instance.
+   * @default globalThis.fetch
+   */
+  fetch?: (request: Request) => ReturnType<typeof fetch>;
   /**
    * An object containing any HTTP headers that you want to pre-populate your
    * `Headers` object with.
@@ -37,7 +43,7 @@ export interface Config<ThrowOnError extends boolean = boolean>
    * {@link https://developer.mozilla.org/docs/Web/API/Headers/Headers#init See more}
    */
   headers?:
-    | CreateAxiosDefaults['headers']
+    | RequestInit['headers']
     | Record<
         string,
         | string
@@ -54,15 +60,31 @@ export interface Config<ThrowOnError extends boolean = boolean>
    * {@link https://developer.mozilla.org/docs/Web/API/fetch#method See more}
    */
   method?:
-    | 'connect'
-    | 'delete'
-    | 'get'
-    | 'head'
-    | 'options'
-    | 'patch'
-    | 'post'
-    | 'put'
-    | 'trace';
+    | 'CONNECT'
+    | 'DELETE'
+    | 'GET'
+    | 'HEAD'
+    | 'OPTIONS'
+    | 'PATCH'
+    | 'POST'
+    | 'PUT'
+    | 'TRACE';
+  /**
+   * Return the response data parsed in a specified format. By default, `auto`
+   * will infer the appropriate method from the `Content-Type` response header.
+   * You can override this behavior with any of the {@link Body} methods.
+   * Select `stream` if you don't want to parse response data at all.
+   * @default 'auto'
+   */
+  parseAs?: Exclude<keyof Body, 'body' | 'bodyUsed'> | 'auto' | 'stream';
+  /**
+   * A function for serializing request query parameters. By default, arrays
+   * will be exploded in form style, objects will be exploded in deepObject
+   * style, and reserved characters are percent-encoded.
+   *
+   * {@link https://swagger.io/docs/specification/serialization/#query View examples}
+   */
+  querySerializer?: QuerySerializer | QuerySerializerOptions;
   /**
    * A function for transforming response data before it's returned to the
    * caller function. This is an ideal place to post-process server data,
@@ -90,10 +112,19 @@ export type RequestResult<
   TError = unknown,
   ThrowOnError extends boolean = boolean,
 > = ThrowOnError extends true
-  ? Promise<AxiosResponse<Data>>
+  ? Promise<{
+      data: Data;
+      request: Request;
+      response: Response;
+    }>
   : Promise<
-      | (AxiosResponse<Data> & { error: undefined })
-      | (AxiosError<TError> & { data: undefined; error: TError })
+      (
+        | { data: Data; error: undefined }
+        | { data: undefined; error: TError }
+      ) & {
+        request: Request;
+        response: Response;
+      }
     >;
 
 type MethodFn = <
@@ -113,23 +144,34 @@ type RequestFn = <
     Pick<Required<RequestOptionsBase<ThrowOnError>>, 'method'>,
 ) => RequestResult<Data, TError, ThrowOnError>;
 
-export interface Client {
+export interface Client<
+  Req = Request,
+  Res = Response,
+  Err = unknown,
+  Opts = RequestOptions,
+> {
+  /**
+   * Returns the final request URL. This method works only with experimental parser.
+   */
+  buildUrl: <T extends { url: string }>(options: T & Options<T>) => string;
+  connect: MethodFn;
   delete: MethodFn;
   get: MethodFn;
   getConfig: () => Config;
   head: MethodFn;
-  instance: AxiosInstance;
+  interceptors: Middleware<Req, Res, Err, Opts>;
   options: MethodFn;
   patch: MethodFn;
   post: MethodFn;
   put: MethodFn;
   request: RequestFn;
   setConfig: (config: Config) => Config;
+  trace: MethodFn;
 }
 
 export type RequestOptions = RequestOptionsBase<false> &
   Config<false> & {
-    headers: AxiosRequestConfig['headers'];
+    headers: Headers;
   };
 
 type OptionsBase<ThrowOnError extends boolean> = Omit<

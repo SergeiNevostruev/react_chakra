@@ -1,88 +1,167 @@
-import type { AxiosError } from 'axios';
-import axios from 'axios';
-
 import type { Client, Config, RequestOptions } from './types';
-import { createConfig, getUrl, mergeConfigs, mergeHeaders } from './utils';
+import {
+  createConfig,
+  createInterceptors,
+  createQuerySerializer,
+  getParseAs,
+  getUrl,
+  mergeConfigs,
+  mergeHeaders,
+} from './utils';
 
-export const createClient = (config: Config): Client => {
+type ReqInit = Omit<RequestInit, 'body' | 'headers'> & {
+  body?: any;
+  headers: ReturnType<typeof mergeHeaders>;
+};
+
+export const createClient = (config: Config = {}): Client => {
   let _config = mergeConfigs(createConfig(), config);
-
-  const instance = axios.create(_config);
 
   const getConfig = (): Config => ({ ..._config });
 
   const setConfig = (config: Config): Config => {
     _config = mergeConfigs(_config, config);
-    instance.defaults = {
-      ...instance.defaults,
-      ..._config,
-      // @ts-expect-error
-      headers: mergeHeaders(instance.defaults.headers, _config.headers),
-    };
     return getConfig();
   };
 
+  const buildUrl: Client['buildUrl'] = (options) => {
+    const url = getUrl({
+      baseUrl: options.baseUrl ?? '',
+      path: options.path,
+      query: options.query,
+      querySerializer:
+        typeof options.querySerializer === 'function'
+          ? options.querySerializer
+          : createQuerySerializer(options.querySerializer),
+      url: options.url,
+    });
+    return url;
+  };
+
+  const interceptors = createInterceptors<
+    Request,
+    Response,
+    unknown,
+    RequestOptions
+  >();
+
   // @ts-expect-error
   const request: Client['request'] = async (options) => {
+    // @ts-expect-error
     const opts: RequestOptions = {
       ..._config,
       ...options,
-      // @ts-expect-error
       headers: mergeHeaders(_config.headers, options.headers),
     };
     if (opts.body && opts.bodySerializer) {
       opts.body = opts.bodySerializer(opts.body);
     }
 
-    const url = getUrl({
-      path: opts.path,
-      url: opts.url,
-    });
+    // remove Content-Type header if body is empty to avoid sending invalid requests
+    if (!opts.body) {
+      opts.headers.delete('Content-Type');
+    }
 
-    const _axios = opts.axios || instance;
+    const url = buildUrl(opts);
+    const requestInit: ReqInit = {
+      redirect: 'follow',
+      ...opts,
+    };
 
-    try {
-      const response = await _axios({
-        ...opts,
-        data: opts.body,
-        params: opts.query,
-        url,
-      });
+    let request = new Request(url, requestInit);
 
-      let { data } = response;
+    for (const fn of interceptors.request._fns) {
+      request = await fn(request, opts);
+    }
 
-      if (opts.responseType === 'json' && opts.responseTransformer) {
+    const _fetch = opts.fetch!;
+    let response = await _fetch(request);
+
+    for (const fn of interceptors.response._fns) {
+      response = await fn(response, request, opts);
+    }
+
+    const result = {
+      request,
+      response,
+    };
+
+    if (response.ok) {
+      if (
+        response.status === 204 ||
+        response.headers.get('Content-Length') === '0'
+      ) {
+        return {
+          data: {},
+          ...result,
+        };
+      }
+
+      if (opts.parseAs === 'stream') {
+        return {
+          data: response.body,
+          ...result,
+        };
+      }
+
+      const parseAs =
+        (opts.parseAs === 'auto'
+          ? getParseAs(response.headers.get('Content-Type'))
+          : opts.parseAs) ?? 'json';
+
+      let data = await response[parseAs]();
+      if (parseAs === 'json' && opts.responseTransformer) {
         data = await opts.responseTransformer(data);
       }
 
       return {
-        ...response,
-        data: data ?? {},
+        data,
+        ...result,
       };
-    } catch (error) {
-      const e = error as AxiosError;
-      if (opts.throwOnError) {
-        throw e;
-      }
-      // @ts-expect-error
-      e.error = e.response?.data ?? {};
-      return e;
     }
+
+    let error = await response.text();
+
+    try {
+      error = JSON.parse(error);
+    } catch {
+      // noop
+    }
+
+    let finalError = error;
+
+    for (const fn of interceptors.error._fns) {
+      finalError = (await fn(error, response, request, opts)) as string;
+    }
+
+    finalError = finalError || ({} as string);
+
+    if (opts.throwOnError) {
+      throw finalError;
+    }
+
+    return {
+      error: finalError,
+      ...result,
+    };
   };
 
   return {
-    delete: (options) => request({ ...options, method: 'delete' }),
-    get: (options) => request({ ...options, method: 'get' }),
+    buildUrl,
+    connect: (options) => request({ ...options, method: 'CONNECT' }),
+    delete: (options) => request({ ...options, method: 'DELETE' }),
+    get: (options) => request({ ...options, method: 'GET' }),
     getConfig,
-    head: (options) => request({ ...options, method: 'head' }),
-    instance,
-    options: (options) => request({ ...options, method: 'options' }),
-    patch: (options) => request({ ...options, method: 'patch' }),
-    post: (options) => request({ ...options, method: 'post' }),
-    put: (options) => request({ ...options, method: 'put' }),
+    head: (options) => request({ ...options, method: 'HEAD' }),
+    interceptors,
+    options: (options) => request({ ...options, method: 'OPTIONS' }),
+    patch: (options) => request({ ...options, method: 'PATCH' }),
+    post: (options) => request({ ...options, method: 'POST' }),
+    put: (options) => request({ ...options, method: 'PUT' }),
     request,
     setConfig,
-  } as Client;
+    trace: (options) => request({ ...options, method: 'TRACE' }),
+  };
 };
 
 export type {
@@ -97,5 +176,6 @@ export {
   createConfig,
   formDataBodySerializer,
   jsonBodySerializer,
+  type QuerySerializerOptions,
   urlSearchParamsBodySerializer,
 } from './utils';
