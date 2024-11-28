@@ -2,6 +2,12 @@ import { findPetsByStatusOptions } from "@/client/@tanstack/react-query.gen";
 import { Card, HStack, Image, SimpleGrid, Text } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Tag } from "@/components/ui/tag";
+import {
+  ProgressCircleRing,
+  ProgressCircleRoot,
+} from "@/components/ui/progress-circle";
+
+import styles from "./Demo.module.css";
 
 const Demo2 = ({ status }: { status: string[] }) => {
   const { isPending, isError, data, error } = useQuery(
@@ -9,7 +15,11 @@ const Demo2 = ({ status }: { status: string[] }) => {
   );
   //   console.log(data);
   if (isPending) {
-    return <span>Loading...</span>;
+    return (
+      <ProgressCircleRoot>
+        <ProgressCircleRing cap="round" />
+      </ProgressCircleRoot>
+    );
   }
 
   if (isError) {
@@ -25,8 +35,9 @@ const Demo2 = ({ status }: { status: string[] }) => {
           key={pets.id + "id" + Math.random().toString(16).slice(2)}
         >
           <Card.Body gap="2">
-            <Card.Title mt="2">{pets.name}</Card.Title>
+            <Card.Title>{pets.name}</Card.Title>
             <Card.Description>{pets.id}</Card.Description>
+            <p className={styles.red}>Test</p>
             <Text>{pets.category?.name + " ---> " + pets.category?.id}</Text>
             <Text>{pets.status}</Text>
             <Text>{pets.name}</Text>
