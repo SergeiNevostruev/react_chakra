@@ -1,5 +1,16 @@
 import { findPetsByStatusOptions } from "@/client/@tanstack/react-query.gen";
-import { Card, HStack, Image, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  AbsoluteCenter,
+  Box,
+  Card,
+  Center,
+  HStack,
+  Image,
+  SimpleGrid,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { Tag } from "@/components/ui/tag";
 import {
@@ -16,9 +27,15 @@ const Demo2 = ({ status }: { status: string[] }) => {
   //   console.log(data);
   if (isPending) {
     return (
-      <ProgressCircleRoot>
-        <ProgressCircleRing cap="round" />
-      </ProgressCircleRoot>
+      <AbsoluteCenter color="white" axis={"both"}>
+        {/* <ProgressCircleRoot value={null} colorPalette={"orange"}>
+          <ProgressCircleRing cap="round" />
+        </ProgressCircleRoot> */}
+        <VStack colorPalette="teal">
+          <Spinner color="colorPalette.600" />
+          <Text color="colorPalette.600">Loading...</Text>
+        </VStack>
+      </AbsoluteCenter>
     );
   }
 
@@ -33,6 +50,8 @@ const Demo2 = ({ status }: { status: string[] }) => {
         <Card.Root
           width="320px"
           key={pets.id + "id" + Math.random().toString(16).slice(2)}
+          _hover={{ shadow: "md" }}
+          _active={{ shadow: "2xl" }}
         >
           <Card.Body gap="2">
             <Card.Title>{pets.name}</Card.Title>
