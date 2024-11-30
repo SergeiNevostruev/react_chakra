@@ -1,6 +1,5 @@
 import Demo2 from "@/components/demo/Demo2";
 import { Checkbox } from "@/components/ui/checkbox";
-import { ColorModeButton } from "@/components/ui/color-mode";
 
 import { For, HStack, Stack, Text } from "@chakra-ui/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
@@ -24,7 +23,6 @@ function About() {
     };
   return (
     <div className="p-2">
-      <ColorModeButton />
       <HStack align="flex-start">
         <For each={["available", "pending", "sold"]}>
           {(variant) => (

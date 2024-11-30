@@ -13,4 +13,7 @@ export const animations = defineTokens.animations({
   bounce: {
     value: "bounce 1s infinite",
   },
+  fadeMicro: {
+    value: "fade-out-06 150ms ease-out",
+  },
 })

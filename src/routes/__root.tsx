@@ -1,3 +1,5 @@
+import { ColorModeButton } from "@/components/ui/color-mode";
+import { Stack, Text } from "@chakra-ui/react";
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import React, { Suspense } from "react";
 // import { TanStackRouterDevtools } from "@tanstack/router-devtools";
@@ -22,12 +24,29 @@ function RootComponent() {
   return (
     <>
       <div className="p-2 flex gap-2">
-        <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>{" "}
-        <Link to="/about" className="[&.active]:font-bold">
-          About
-        </Link>
+        <Stack
+          direction="row"
+          justifyContent={"flex-end"}
+          h={10}
+          marginRight={5}
+        >
+          {[
+            ["/", "Home"],
+            ["/about", "About"],
+            ["/reducer", "Reducer"],
+          ].map((v, i) => (
+            <Link to={v[0]} key={i}>
+              <Text
+                color={"GrayText"}
+                _hover={{ bg: "blue.100" }}
+                display={"inline"}
+              >
+                {v[1]}
+              </Text>
+            </Link>
+          ))}
+          <ColorModeButton />
+        </Stack>
       </div>
       <hr />
       <Outlet />

@@ -9,18 +9,8 @@ const Demo = () => {
     <>
       <Text>Медведи: {bears}</Text>
       <HStack>
-        <Button
-          color={"ButtonText"}
-          background={"green.200"}
-          onClick={increasePopulation}
-        >
-          Добавь медведя
-        </Button>
-        <Button
-          color={"ButtonText"}
-          background={"green.200"}
-          onClick={removeAllBears}
-        >
+        <Button onClick={increasePopulation}>Добавь медведя</Button>
+        <Button variant={"outline"} onClick={removeAllBears}>
           Удалить всех
         </Button>
       </HStack>

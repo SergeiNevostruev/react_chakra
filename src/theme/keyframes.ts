@@ -107,7 +107,16 @@ export const keyframes = {
     to: {
       opacity: 0,
     },
+    
   },
+  "fade-out-06": {
+      from: {
+        opacity: 1,
+      },
+      to: {
+        opacity: 0.6,
+      },
+    },
   "slide-from-left-full": {
     from: {
       translate: "-100% 0",
