@@ -1,4 +1,4 @@
-import Demo2 from "@/components/demo/Demo2";
+import Demo2 from "@/components/elements/demo/Demo2";
 import { Checkbox } from "@/components/ui/checkbox";
 
 import { For, HStack, Stack, Text } from "@chakra-ui/react";

@@ -1,4 +1,4 @@
-import Demo from "@/components/demo/Demo";
+import Demo from "@/components/elements/demo/Demo";
 import { createLazyFileRoute } from "@tanstack/react-router";
 
 export const Route = createLazyFileRoute("/")({

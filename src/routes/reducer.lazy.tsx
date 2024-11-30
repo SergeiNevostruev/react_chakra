@@ -3,7 +3,7 @@ import { useReducer, useRef } from "react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { For, HStack, Stack } from "@chakra-ui/react";
 import { Checkbox } from "@/components/ui/checkbox";
-import Demo2 from "@/components/demo/Demo2";
+import Demo2 from "@/components/elements/demo/Demo2";
 import { formReduser, INITIAL_STATE, StatusType } from "@/store/reducer.state";
 
 export const Route = createLazyFileRoute("/reducer")({
