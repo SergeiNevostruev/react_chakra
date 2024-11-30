@@ -1,5 +1,6 @@
+import { Header } from "@/components/custom-ui/Header/Header";
 import { ColorModeButton } from "@/components/ui/color-mode";
-import { Stack, Text } from "@chakra-ui/react";
+import { Center, Stack, Text } from "@chakra-ui/react";
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import React, { Suspense } from "react";
 // import { TanStackRouterDevtools } from "@tanstack/router-devtools";
@@ -23,6 +24,9 @@ export const Route = createRootRoute({
 function RootComponent() {
   return (
     <>
+      <Header _hover={{ shadow: "md" }}>
+        <Center>Header</Center>
+      </Header>
       <div className="p-2 flex gap-2">
         <Stack
           direction="row"
