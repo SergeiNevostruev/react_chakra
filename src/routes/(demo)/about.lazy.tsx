@@ -5,10 +5,11 @@ import { For, HStack, Stack, Text } from "@chakra-ui/react";
 import { createLazyFileRoute } from "@tanstack/react-router";
 import { ChangeEvent, FormEvent, useState } from "react";
 
-export const Route = createLazyFileRoute("/about")({
-  component: About,
+export const Route = createLazyFileRoute("/(demo)/about")({
+  component: () => <div></div>,
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function About() {
   const [value, setValue] = useState(["available"]);
   const changeBox =

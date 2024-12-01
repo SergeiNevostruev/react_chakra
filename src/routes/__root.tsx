@@ -1,7 +1,12 @@
-import { Header } from "@/components/custom-ui/Header/Header";
-import { ColorModeButton } from "@/components/ui/color-mode";
-import { Center, Stack, Text } from "@chakra-ui/react";
-import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
+// import { Header } from "@/components/custom-ui/Header/Header";
+import NotFound from "@/components/elements/Common/NotFound";
+// import { ColorModeButton } from "@/components/ui/color-mode";
+// import { Box, Center, Stack, Text } from "@chakra-ui/react";
+import {
+  createRootRoute,
+  // Link,
+  Outlet,
+} from "@tanstack/react-router";
 import React, { Suspense } from "react";
 // import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
@@ -19,12 +24,14 @@ const TanStackRouterDevtools =
 
 export const Route = createRootRoute({
   component: RootComponent,
+  notFoundComponent: () => <NotFound />,
 });
 
 function RootComponent() {
   return (
     <>
-      <Header _hover={{ shadow: "md" }}>
+      {/* <Box as={"header"}>Header</Box> */}
+      {/* <Header _hover={{ shadow: "md" }}>
         <Center>Header</Center>
       </Header>
       <div className="p-2 flex gap-2">
@@ -52,7 +59,7 @@ function RootComponent() {
           <ColorModeButton />
         </Stack>
       </div>
-      <hr />
+      <hr /> */}
       <Outlet />
       <Suspense>
         <TanStackRouterDevtools />

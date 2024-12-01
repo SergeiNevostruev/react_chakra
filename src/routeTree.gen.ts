@@ -16,53 +16,59 @@ import { Route as rootRoute } from './routes/__root'
 
 // Create Virtual Routes
 
-const ReducerLazyImport = createFileRoute('/reducer')()
-const AboutLazyImport = createFileRoute('/about')()
-const IndexLazyImport = createFileRoute('/')()
+const demoIndexLazyImport = createFileRoute('/(demo)/')()
+const demoReducerLazyImport = createFileRoute('/(demo)/reducer')()
+const demoAboutLazyImport = createFileRoute('/(demo)/about')()
 
 // Create/Update Routes
 
-const ReducerLazyRoute = ReducerLazyImport.update({
-  id: '/reducer',
-  path: '/reducer',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/reducer.lazy').then((d) => d.Route))
+const demoIndexLazyRoute = demoIndexLazyImport
+  .update({
+    id: '/(demo)/',
+    path: '/',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() => import('./routes/(demo)/index.lazy').then((d) => d.Route))
 
-const AboutLazyRoute = AboutLazyImport.update({
-  id: '/about',
-  path: '/about',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/about.lazy').then((d) => d.Route))
+const demoReducerLazyRoute = demoReducerLazyImport
+  .update({
+    id: '/(demo)/reducer',
+    path: '/reducer',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() => import('./routes/(demo)/reducer.lazy').then((d) => d.Route))
 
-const IndexLazyRoute = IndexLazyImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => rootRoute,
-} as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
+const demoAboutLazyRoute = demoAboutLazyImport
+  .update({
+    id: '/(demo)/about',
+    path: '/about',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() => import('./routes/(demo)/about.lazy').then((d) => d.Route))
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexLazyImport
-      parentRoute: typeof rootRoute
-    }
-    '/about': {
-      id: '/about'
+    '/(demo)/about': {
+      id: '/(demo)/about'
       path: '/about'
       fullPath: '/about'
-      preLoaderRoute: typeof AboutLazyImport
+      preLoaderRoute: typeof demoAboutLazyImport
       parentRoute: typeof rootRoute
     }
-    '/reducer': {
-      id: '/reducer'
+    '/(demo)/reducer': {
+      id: '/(demo)/reducer'
       path: '/reducer'
       fullPath: '/reducer'
-      preLoaderRoute: typeof ReducerLazyImport
+      preLoaderRoute: typeof demoReducerLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/(demo)/': {
+      id: '/(demo)/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof demoIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -71,43 +77,43 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexLazyRoute
-  '/about': typeof AboutLazyRoute
-  '/reducer': typeof ReducerLazyRoute
+  '/about': typeof demoAboutLazyRoute
+  '/reducer': typeof demoReducerLazyRoute
+  '/': typeof demoIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexLazyRoute
-  '/about': typeof AboutLazyRoute
-  '/reducer': typeof ReducerLazyRoute
+  '/about': typeof demoAboutLazyRoute
+  '/reducer': typeof demoReducerLazyRoute
+  '/': typeof demoIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexLazyRoute
-  '/about': typeof AboutLazyRoute
-  '/reducer': typeof ReducerLazyRoute
+  '/(demo)/about': typeof demoAboutLazyRoute
+  '/(demo)/reducer': typeof demoReducerLazyRoute
+  '/(demo)/': typeof demoIndexLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/reducer'
+  fullPaths: '/about' | '/reducer' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/reducer'
-  id: '__root__' | '/' | '/about' | '/reducer'
+  to: '/about' | '/reducer' | '/'
+  id: '__root__' | '/(demo)/about' | '/(demo)/reducer' | '/(demo)/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexLazyRoute: typeof IndexLazyRoute
-  AboutLazyRoute: typeof AboutLazyRoute
-  ReducerLazyRoute: typeof ReducerLazyRoute
+  demoAboutLazyRoute: typeof demoAboutLazyRoute
+  demoReducerLazyRoute: typeof demoReducerLazyRoute
+  demoIndexLazyRoute: typeof demoIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexLazyRoute: IndexLazyRoute,
-  AboutLazyRoute: AboutLazyRoute,
-  ReducerLazyRoute: ReducerLazyRoute,
+  demoAboutLazyRoute: demoAboutLazyRoute,
+  demoReducerLazyRoute: demoReducerLazyRoute,
+  demoIndexLazyRoute: demoIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -120,19 +126,19 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/about",
-        "/reducer"
+        "/(demo)/about",
+        "/(demo)/reducer",
+        "/(demo)/"
       ]
     },
-    "/": {
-      "filePath": "index.lazy.tsx"
+    "/(demo)/about": {
+      "filePath": "(demo)/about.lazy.tsx"
     },
-    "/about": {
-      "filePath": "about.lazy.tsx"
+    "/(demo)/reducer": {
+      "filePath": "(demo)/reducer.lazy.tsx"
     },
-    "/reducer": {
-      "filePath": "reducer.lazy.tsx"
+    "/(demo)/": {
+      "filePath": "(demo)/index.lazy.tsx"
     }
   }
 }

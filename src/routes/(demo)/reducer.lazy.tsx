@@ -6,10 +6,11 @@ import { Checkbox } from "@/components/ui/checkbox";
 import Demo2 from "@/components/elements/demo/Demo2";
 import { formReduser, INITIAL_STATE, StatusType } from "@/store/reducer.state";
 
-export const Route = createLazyFileRoute("/reducer")({
-  component: RouteComponent,
+export const Route = createLazyFileRoute("/(demo)/reducer")({
+  component: () => <div></div>,
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function RouteComponent() {
   const [formState, dispatch] = useReducer(formReduser, INITIAL_STATE);
   const formRef = useRef<HTMLFormElement>(null);
