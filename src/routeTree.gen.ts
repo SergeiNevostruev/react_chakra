@@ -13,22 +13,37 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
+import { Route as LayoutImport } from './routes/_layout'
+import { Route as authLoginImport } from './routes/(auth)/login'
 
 // Create Virtual Routes
 
-const demoIndexLazyImport = createFileRoute('/(demo)/')()
+const LayoutIndexLazyImport = createFileRoute('/_layout/')()
+const LayoutCurrentUserLazyImport = createFileRoute('/_layout/current-user')()
 const demoReducerLazyImport = createFileRoute('/(demo)/reducer')()
+const demoIndex1LazyImport = createFileRoute('/(demo)/index1')()
 const demoAboutLazyImport = createFileRoute('/(demo)/about')()
 
 // Create/Update Routes
 
-const demoIndexLazyRoute = demoIndexLazyImport
-  .update({
-    id: '/(demo)/',
-    path: '/',
-    getParentRoute: () => rootRoute,
-  } as any)
-  .lazy(() => import('./routes/(demo)/index.lazy').then((d) => d.Route))
+const LayoutRoute = LayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LayoutIndexLazyRoute = LayoutIndexLazyImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() => import('./routes/_layout/index.lazy').then((d) => d.Route))
+
+const LayoutCurrentUserLazyRoute = LayoutCurrentUserLazyImport.update({
+  id: '/current-user',
+  path: '/current-user',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() =>
+  import('./routes/_layout/current-user.lazy').then((d) => d.Route),
+)
 
 const demoReducerLazyRoute = demoReducerLazyImport
   .update({
@@ -38,6 +53,14 @@ const demoReducerLazyRoute = demoReducerLazyImport
   } as any)
   .lazy(() => import('./routes/(demo)/reducer.lazy').then((d) => d.Route))
 
+const demoIndex1LazyRoute = demoIndex1LazyImport
+  .update({
+    id: '/(demo)/index1',
+    path: '/index1',
+    getParentRoute: () => rootRoute,
+  } as any)
+  .lazy(() => import('./routes/(demo)/index1.lazy').then((d) => d.Route))
+
 const demoAboutLazyRoute = demoAboutLazyImport
   .update({
     id: '/(demo)/about',
@@ -46,15 +69,42 @@ const demoAboutLazyRoute = demoAboutLazyImport
   } as any)
   .lazy(() => import('./routes/(demo)/about.lazy').then((d) => d.Route))
 
+const authLoginRoute = authLoginImport.update({
+  id: '/(auth)/login',
+  path: '/login',
+  getParentRoute: () => rootRoute,
+} as any)
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/_layout': {
+      id: '/_layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof LayoutImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/login': {
+      id: '/(auth)/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof authLoginImport
+      parentRoute: typeof rootRoute
+    }
     '/(demo)/about': {
       id: '/(demo)/about'
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof demoAboutLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/(demo)/index1': {
+      id: '/(demo)/index1'
+      path: '/index1'
+      fullPath: '/index1'
+      preLoaderRoute: typeof demoIndex1LazyImport
       parentRoute: typeof rootRoute
     }
     '/(demo)/reducer': {
@@ -64,56 +114,106 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof demoReducerLazyImport
       parentRoute: typeof rootRoute
     }
-    '/(demo)/': {
-      id: '/(demo)/'
+    '/_layout/current-user': {
+      id: '/_layout/current-user'
+      path: '/current-user'
+      fullPath: '/current-user'
+      preLoaderRoute: typeof LayoutCurrentUserLazyImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/': {
+      id: '/_layout/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof demoIndexLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutIndexLazyImport
+      parentRoute: typeof LayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface LayoutRouteChildren {
+  LayoutCurrentUserLazyRoute: typeof LayoutCurrentUserLazyRoute
+  LayoutIndexLazyRoute: typeof LayoutIndexLazyRoute
+}
+
+const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutCurrentUserLazyRoute: LayoutCurrentUserLazyRoute,
+  LayoutIndexLazyRoute: LayoutIndexLazyRoute,
+}
+
+const LayoutRouteWithChildren =
+  LayoutRoute._addFileChildren(LayoutRouteChildren)
+
 export interface FileRoutesByFullPath {
+  '': typeof LayoutRouteWithChildren
+  '/login': typeof authLoginRoute
   '/about': typeof demoAboutLazyRoute
+  '/index1': typeof demoIndex1LazyRoute
   '/reducer': typeof demoReducerLazyRoute
-  '/': typeof demoIndexLazyRoute
+  '/current-user': typeof LayoutCurrentUserLazyRoute
+  '/': typeof LayoutIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
+  '/login': typeof authLoginRoute
   '/about': typeof demoAboutLazyRoute
+  '/index1': typeof demoIndex1LazyRoute
   '/reducer': typeof demoReducerLazyRoute
-  '/': typeof demoIndexLazyRoute
+  '/current-user': typeof LayoutCurrentUserLazyRoute
+  '/': typeof LayoutIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
+  '/_layout': typeof LayoutRouteWithChildren
+  '/(auth)/login': typeof authLoginRoute
   '/(demo)/about': typeof demoAboutLazyRoute
+  '/(demo)/index1': typeof demoIndex1LazyRoute
   '/(demo)/reducer': typeof demoReducerLazyRoute
-  '/(demo)/': typeof demoIndexLazyRoute
+  '/_layout/current-user': typeof LayoutCurrentUserLazyRoute
+  '/_layout/': typeof LayoutIndexLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/about' | '/reducer' | '/'
+  fullPaths:
+    | ''
+    | '/login'
+    | '/about'
+    | '/index1'
+    | '/reducer'
+    | '/current-user'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/about' | '/reducer' | '/'
-  id: '__root__' | '/(demo)/about' | '/(demo)/reducer' | '/(demo)/'
+  to: '/login' | '/about' | '/index1' | '/reducer' | '/current-user' | '/'
+  id:
+    | '__root__'
+    | '/_layout'
+    | '/(auth)/login'
+    | '/(demo)/about'
+    | '/(demo)/index1'
+    | '/(demo)/reducer'
+    | '/_layout/current-user'
+    | '/_layout/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
+  LayoutRoute: typeof LayoutRouteWithChildren
+  authLoginRoute: typeof authLoginRoute
   demoAboutLazyRoute: typeof demoAboutLazyRoute
+  demoIndex1LazyRoute: typeof demoIndex1LazyRoute
   demoReducerLazyRoute: typeof demoReducerLazyRoute
-  demoIndexLazyRoute: typeof demoIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
+  LayoutRoute: LayoutRouteWithChildren,
+  authLoginRoute: authLoginRoute,
   demoAboutLazyRoute: demoAboutLazyRoute,
+  demoIndex1LazyRoute: demoIndex1LazyRoute,
   demoReducerLazyRoute: demoReducerLazyRoute,
-  demoIndexLazyRoute: demoIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -126,19 +226,39 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
+        "/_layout",
+        "/(auth)/login",
         "/(demo)/about",
-        "/(demo)/reducer",
-        "/(demo)/"
+        "/(demo)/index1",
+        "/(demo)/reducer"
       ]
+    },
+    "/_layout": {
+      "filePath": "_layout.tsx",
+      "children": [
+        "/_layout/current-user",
+        "/_layout/"
+      ]
+    },
+    "/(auth)/login": {
+      "filePath": "(auth)/login.tsx"
     },
     "/(demo)/about": {
       "filePath": "(demo)/about.lazy.tsx"
     },
+    "/(demo)/index1": {
+      "filePath": "(demo)/index1.lazy.tsx"
+    },
     "/(demo)/reducer": {
       "filePath": "(demo)/reducer.lazy.tsx"
     },
-    "/(demo)/": {
-      "filePath": "(demo)/index.lazy.tsx"
+    "/_layout/current-user": {
+      "filePath": "_layout/current-user.lazy.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/": {
+      "filePath": "_layout/index.lazy.tsx",
+      "parent": "/_layout"
     }
   }
 }

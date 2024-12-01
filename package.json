@@ -11,13 +11,14 @@
     "openapi-ts": "openapi-ts",
     "generate-client": "npx @hey-api/openapi-ts --input ./openapi.json --output ./src/client --client axios --exportSchemas true",
     "get-openapi-json": "bash ./scripts/get_openapi.sh http://localhost:8000/api/v1/openapi.json",
-    "update-openapi-ts": "npm run get-openapi-json && openapi-ts"
+    "update-openapi-ts": "npm run get-openapi-json && openapi-ts",
+    "generate-client2": "npm run get-openapi-json && openapi-ts --input ./openapi.json --output ./src/client --client axios --exportSchemas true"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^3.2.1",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
-    "@hey-api/client-fetch": "^0.5.0",
     "@tanstack/react-query": "^5.61.5",
     "@tanstack/react-query-devtools": "^5.61.5",
     "@tanstack/react-router": "^1.83.1",
@@ -35,7 +36,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.15.0",
-    "@hey-api/openapi-ts": "^0.57.1",
+    "@hey-api/openapi-ts": "^0.34.1",
     "@tanstack/eslint-plugin-query": "^5.61.4",
     "@tanstack/router-devtools": "^1.83.1",
     "@tanstack/router-plugin": "^1.83.1",

@@ -10,12 +10,12 @@ import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { client } from "./client/sdk.gen";
+import { OpenAPI } from "./client";
 
-client.setConfig({
-  // baseURL: import.meta.env.BACKEND_HOST,
-  baseUrl: "https://petstore.swagger.io/v2",
-});
+OpenAPI.BASE = import.meta.env.VITE_APP_BACKEND_HOST;
+OpenAPI.TOKEN = async () => {
+  return localStorage.getItem("access_token") || "";
+};
 
 // Create a new router instance
 const router = createRouter({ routeTree });
