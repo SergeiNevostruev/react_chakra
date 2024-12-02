@@ -19,7 +19,13 @@ import { Route as authLoginImport } from './routes/(auth)/login'
 // Create Virtual Routes
 
 const LayoutIndexLazyImport = createFileRoute('/_layout/')()
+const LayoutTestLazyImport = createFileRoute('/_layout/test')()
+const LayoutSettingsLazyImport = createFileRoute('/_layout/settings')()
+const LayoutProjectLazyImport = createFileRoute('/_layout/project')()
+const LayoutItemsLazyImport = createFileRoute('/_layout/items')()
 const LayoutCurrentUserLazyImport = createFileRoute('/_layout/current-user')()
+const LayoutAppsLazyImport = createFileRoute('/_layout/apps')()
+const LayoutAdminLazyImport = createFileRoute('/_layout/admin')()
 const demoReducerLazyImport = createFileRoute('/(demo)/reducer')()
 const demoIndex1LazyImport = createFileRoute('/(demo)/index1')()
 const demoAboutLazyImport = createFileRoute('/(demo)/about')()
@@ -37,6 +43,34 @@ const LayoutIndexLazyRoute = LayoutIndexLazyImport.update({
   getParentRoute: () => LayoutRoute,
 } as any).lazy(() => import('./routes/_layout/index.lazy').then((d) => d.Route))
 
+const LayoutTestLazyRoute = LayoutTestLazyImport.update({
+  id: '/test',
+  path: '/test',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() => import('./routes/_layout/test.lazy').then((d) => d.Route))
+
+const LayoutSettingsLazyRoute = LayoutSettingsLazyImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() =>
+  import('./routes/_layout/settings.lazy').then((d) => d.Route),
+)
+
+const LayoutProjectLazyRoute = LayoutProjectLazyImport.update({
+  id: '/project',
+  path: '/project',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() =>
+  import('./routes/_layout/project.lazy').then((d) => d.Route),
+)
+
+const LayoutItemsLazyRoute = LayoutItemsLazyImport.update({
+  id: '/items',
+  path: '/items',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() => import('./routes/_layout/items.lazy').then((d) => d.Route))
+
 const LayoutCurrentUserLazyRoute = LayoutCurrentUserLazyImport.update({
   id: '/current-user',
   path: '/current-user',
@@ -44,6 +78,18 @@ const LayoutCurrentUserLazyRoute = LayoutCurrentUserLazyImport.update({
 } as any).lazy(() =>
   import('./routes/_layout/current-user.lazy').then((d) => d.Route),
 )
+
+const LayoutAppsLazyRoute = LayoutAppsLazyImport.update({
+  id: '/apps',
+  path: '/apps',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() => import('./routes/_layout/apps.lazy').then((d) => d.Route))
+
+const LayoutAdminLazyRoute = LayoutAdminLazyImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => LayoutRoute,
+} as any).lazy(() => import('./routes/_layout/admin.lazy').then((d) => d.Route))
 
 const demoReducerLazyRoute = demoReducerLazyImport
   .update({
@@ -114,11 +160,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof demoReducerLazyImport
       parentRoute: typeof rootRoute
     }
+    '/_layout/admin': {
+      id: '/_layout/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof LayoutAdminLazyImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/apps': {
+      id: '/_layout/apps'
+      path: '/apps'
+      fullPath: '/apps'
+      preLoaderRoute: typeof LayoutAppsLazyImport
+      parentRoute: typeof LayoutImport
+    }
     '/_layout/current-user': {
       id: '/_layout/current-user'
       path: '/current-user'
       fullPath: '/current-user'
       preLoaderRoute: typeof LayoutCurrentUserLazyImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/items': {
+      id: '/_layout/items'
+      path: '/items'
+      fullPath: '/items'
+      preLoaderRoute: typeof LayoutItemsLazyImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/project': {
+      id: '/_layout/project'
+      path: '/project'
+      fullPath: '/project'
+      preLoaderRoute: typeof LayoutProjectLazyImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/settings': {
+      id: '/_layout/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof LayoutSettingsLazyImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/test': {
+      id: '/_layout/test'
+      path: '/test'
+      fullPath: '/test'
+      preLoaderRoute: typeof LayoutTestLazyImport
       parentRoute: typeof LayoutImport
     }
     '/_layout/': {
@@ -134,12 +222,24 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface LayoutRouteChildren {
+  LayoutAdminLazyRoute: typeof LayoutAdminLazyRoute
+  LayoutAppsLazyRoute: typeof LayoutAppsLazyRoute
   LayoutCurrentUserLazyRoute: typeof LayoutCurrentUserLazyRoute
+  LayoutItemsLazyRoute: typeof LayoutItemsLazyRoute
+  LayoutProjectLazyRoute: typeof LayoutProjectLazyRoute
+  LayoutSettingsLazyRoute: typeof LayoutSettingsLazyRoute
+  LayoutTestLazyRoute: typeof LayoutTestLazyRoute
   LayoutIndexLazyRoute: typeof LayoutIndexLazyRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutAdminLazyRoute: LayoutAdminLazyRoute,
+  LayoutAppsLazyRoute: LayoutAppsLazyRoute,
   LayoutCurrentUserLazyRoute: LayoutCurrentUserLazyRoute,
+  LayoutItemsLazyRoute: LayoutItemsLazyRoute,
+  LayoutProjectLazyRoute: LayoutProjectLazyRoute,
+  LayoutSettingsLazyRoute: LayoutSettingsLazyRoute,
+  LayoutTestLazyRoute: LayoutTestLazyRoute,
   LayoutIndexLazyRoute: LayoutIndexLazyRoute,
 }
 
@@ -152,7 +252,13 @@ export interface FileRoutesByFullPath {
   '/about': typeof demoAboutLazyRoute
   '/index1': typeof demoIndex1LazyRoute
   '/reducer': typeof demoReducerLazyRoute
+  '/admin': typeof LayoutAdminLazyRoute
+  '/apps': typeof LayoutAppsLazyRoute
   '/current-user': typeof LayoutCurrentUserLazyRoute
+  '/items': typeof LayoutItemsLazyRoute
+  '/project': typeof LayoutProjectLazyRoute
+  '/settings': typeof LayoutSettingsLazyRoute
+  '/test': typeof LayoutTestLazyRoute
   '/': typeof LayoutIndexLazyRoute
 }
 
@@ -161,7 +267,13 @@ export interface FileRoutesByTo {
   '/about': typeof demoAboutLazyRoute
   '/index1': typeof demoIndex1LazyRoute
   '/reducer': typeof demoReducerLazyRoute
+  '/admin': typeof LayoutAdminLazyRoute
+  '/apps': typeof LayoutAppsLazyRoute
   '/current-user': typeof LayoutCurrentUserLazyRoute
+  '/items': typeof LayoutItemsLazyRoute
+  '/project': typeof LayoutProjectLazyRoute
+  '/settings': typeof LayoutSettingsLazyRoute
+  '/test': typeof LayoutTestLazyRoute
   '/': typeof LayoutIndexLazyRoute
 }
 
@@ -172,7 +284,13 @@ export interface FileRoutesById {
   '/(demo)/about': typeof demoAboutLazyRoute
   '/(demo)/index1': typeof demoIndex1LazyRoute
   '/(demo)/reducer': typeof demoReducerLazyRoute
+  '/_layout/admin': typeof LayoutAdminLazyRoute
+  '/_layout/apps': typeof LayoutAppsLazyRoute
   '/_layout/current-user': typeof LayoutCurrentUserLazyRoute
+  '/_layout/items': typeof LayoutItemsLazyRoute
+  '/_layout/project': typeof LayoutProjectLazyRoute
+  '/_layout/settings': typeof LayoutSettingsLazyRoute
+  '/_layout/test': typeof LayoutTestLazyRoute
   '/_layout/': typeof LayoutIndexLazyRoute
 }
 
@@ -184,10 +302,28 @@ export interface FileRouteTypes {
     | '/about'
     | '/index1'
     | '/reducer'
+    | '/admin'
+    | '/apps'
     | '/current-user'
+    | '/items'
+    | '/project'
+    | '/settings'
+    | '/test'
     | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/about' | '/index1' | '/reducer' | '/current-user' | '/'
+  to:
+    | '/login'
+    | '/about'
+    | '/index1'
+    | '/reducer'
+    | '/admin'
+    | '/apps'
+    | '/current-user'
+    | '/items'
+    | '/project'
+    | '/settings'
+    | '/test'
+    | '/'
   id:
     | '__root__'
     | '/_layout'
@@ -195,7 +331,13 @@ export interface FileRouteTypes {
     | '/(demo)/about'
     | '/(demo)/index1'
     | '/(demo)/reducer'
+    | '/_layout/admin'
+    | '/_layout/apps'
     | '/_layout/current-user'
+    | '/_layout/items'
+    | '/_layout/project'
+    | '/_layout/settings'
+    | '/_layout/test'
     | '/_layout/'
   fileRoutesById: FileRoutesById
 }
@@ -236,7 +378,13 @@ export const routeTree = rootRoute
     "/_layout": {
       "filePath": "_layout.tsx",
       "children": [
+        "/_layout/admin",
+        "/_layout/apps",
         "/_layout/current-user",
+        "/_layout/items",
+        "/_layout/project",
+        "/_layout/settings",
+        "/_layout/test",
         "/_layout/"
       ]
     },
@@ -252,8 +400,32 @@ export const routeTree = rootRoute
     "/(demo)/reducer": {
       "filePath": "(demo)/reducer.lazy.tsx"
     },
+    "/_layout/admin": {
+      "filePath": "_layout/admin.lazy.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/apps": {
+      "filePath": "_layout/apps.lazy.tsx",
+      "parent": "/_layout"
+    },
     "/_layout/current-user": {
       "filePath": "_layout/current-user.lazy.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/items": {
+      "filePath": "_layout/items.lazy.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/project": {
+      "filePath": "_layout/project.lazy.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/settings": {
+      "filePath": "_layout/settings.lazy.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/test": {
+      "filePath": "_layout/test.lazy.tsx",
       "parent": "/_layout"
     },
     "/_layout/": {
