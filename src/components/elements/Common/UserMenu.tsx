@@ -7,7 +7,7 @@ import {
   // MenuList,
 } from "@chakra-ui/react";
 import { Link } from "@tanstack/react-router";
-import { FaUserAstronaut } from "react-icons/fa";
+import { RiGovernmentLine } from "react-icons/ri";
 import { FiLogOut, FiUser } from "react-icons/fi";
 import {
   MenuContent,
@@ -44,7 +44,7 @@ const UserMenu = () => {
             data-testid="user-menu"
           >
             <IconButton>
-              <FaUserAstronaut color="white" fontSize="18px" />
+              <RiGovernmentLine color="white" fontSize="18px" />
             </IconButton>
           </MenuTrigger>
           <MenuContent>

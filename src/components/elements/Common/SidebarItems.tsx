@@ -1,4 +1,4 @@
-import { Box, Flex, Text, useToken } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import {
@@ -28,7 +28,6 @@ interface SidebarItemsProps {
 
 const SidebarItems = ({ onClose }: SidebarItemsProps) => {
   const queryClient = useQueryClient();
-  const [cyan] = useToken("colors", ["cyan"]);
   const currentUser = queryClient.getQueryData<UserPublic>(["currentUser"]);
 
   const finalItems = currentUser?.is_superuser
@@ -44,8 +43,7 @@ const SidebarItems = ({ onClose }: SidebarItemsProps) => {
         to={path}
         activeProps={{
           style: {
-            borderRadius: "12px",
-            background: cyan,
+            textDecoration: "underline 2px",
           },
         }}
       >

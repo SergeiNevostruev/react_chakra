@@ -22,7 +22,7 @@ function Layout() {
   return (
     <Flex direction="column" h={"100vh"} display={"flex"}>
       <Header />
-      <Flex maxW="large" h="5/6" position="relative">
+      <Flex as={"main"} maxW="large" h="5/6" position="relative">
         <Sidebar />
         <Separator orientation={"vertical"} />
         {isLoading ? (
