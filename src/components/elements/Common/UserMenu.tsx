@@ -51,7 +51,7 @@ const UserMenu = () => {
             <MenuItem asChild value="My profile">
               <Link to={"/settings"}>
                 <FiUser fontSize="18px" />
-                My profile
+                Профиль
               </Link>
             </MenuItem>
             <MenuItem
@@ -61,7 +61,7 @@ const UserMenu = () => {
               value="Log out"
             >
               <FiLogOut fontSize="18px" />
-              Log out
+              Выйти
             </MenuItem>
           </MenuContent>
         </MenuRoot>

@@ -54,12 +54,12 @@ const Sidebar = () => {
                   alignItems="center"
                 >
                   <FiLogOut />
-                  <Text ml={2}>Log out</Text>
+                  <Text ml={2}>Выйти</Text>
                 </Flex>
               </Box>
               {currentUser?.email && (
                 <Text lineClamp={2} fontSize="sm" p={2}>
-                  Logged in as: {currentUser.email}
+                  Вход под пользователем: {currentUser.email}
                 </Text>
               )}
             </Flex>

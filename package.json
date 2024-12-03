@@ -8,11 +8,9 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "openapi-ts": "openapi-ts",
-    "generate-client": "npx @hey-api/openapi-ts --input ./openapi.json --output ./src/client --client axios --exportSchemas true",
     "get-openapi-json": "bash ./scripts/get_openapi.sh http://localhost:8000/api/v1/openapi.json",
     "update-openapi-ts": "npm run get-openapi-json && openapi-ts",
-    "generate-client2": "npm run get-openapi-json && openapi-ts --input ./openapi.json --output ./src/client --client axios --exportSchemas true"
+    "generate-client-project": "npm run get-openapi-json && openapi-ts --input ./openapi.json --output ./src/client --client axios --exportSchemas true"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.2.4",

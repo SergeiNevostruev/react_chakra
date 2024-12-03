@@ -2,66 +2,64 @@ import {
   Link as RouterLink,
   createFileRoute,
   redirect,
-} from '@tanstack/react-router'
-import { AiOutlineEye, AiOutlineEyeInvisible } from 'react-icons/ai'
-import useAuth, { isLoggedIn } from '@/hooks/useAuth'
-import useBoolean from '@/hooks/useBoolean'
-import { type Body_login_login_access_token as AccessToken } from '@/client'
-import { type SubmitHandler, useForm } from 'react-hook-form'
+} from "@tanstack/react-router";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import useAuth, { isLoggedIn } from "@/hooks/useAuth";
+import useBoolean from "@/hooks/useBoolean";
+import { type Body_login_login_access_token as AccessToken } from "@/client";
+import { type SubmitHandler, useForm } from "react-hook-form";
 import {
   Container,
   Fieldset,
-  Icon,
   IconButton,
   Image,
   Input,
   Link,
   Text,
-} from '@chakra-ui/react'
-import { InputGroup } from '@/components/ui/input-group'
-import Logo from '@/assets/fastapi-logo.svg'
-import { emailPattern } from '@/utils'
-import { Button } from '@/components/ui/button'
-import { LuView } from 'react-icons/lu'
+} from "@chakra-ui/react";
+import { InputGroup } from "@/components/ui/input-group";
+import Logo from "@/assets/fastapi-logo.svg";
+import { emailPattern } from "@/utils";
+import { Button } from "@/components/ui/button";
 
-export const Route = createFileRoute('/(auth)/login')({
+export const Route = createFileRoute("/(auth)/login")({
   component: Login,
   beforeLoad: async () => {
     if (isLoggedIn()) {
       throw redirect({
-        to: '/',
-      })
+        to: "/",
+      });
     }
   },
-})
+});
 
 function Login() {
-  const [show, setShow] = useBoolean()
-  const { loginMutation, error, resetError } = useAuth()
+  const [show, setShow] = useBoolean();
+  const { loginMutation, error, resetError } = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<AccessToken>({
-    mode: 'onBlur',
-    criteriaMode: 'all',
+    mode: "onBlur",
+    criteriaMode: "all",
     defaultValues: {
-      username: '',
-      password: '',
+      username: "",
+      password: "",
     },
-  })
+  });
 
   const onSubmit: SubmitHandler<AccessToken> = async (data) => {
-    if (isSubmitting) return
+    if (isSubmitting) return;
 
-    resetError()
+    resetError();
 
     try {
-      await loginMutation.mutateAsync(data)
+      await loginMutation.mutateAsync(data);
     } catch {
       // error is handled by useAuth hook
     }
-  }
+  };
 
   return (
     <>
@@ -74,6 +72,7 @@ function Login() {
         justifyContent="center"
         gap={4}
         centerContent
+        shadow={"md"}
       >
         <Image
           src={Logo}
@@ -86,8 +85,8 @@ function Login() {
         <Fieldset.Root id="username" invalid={!!errors.username || !!error}>
           <Input
             id="username"
-            {...register('username', {
-              required: 'Электронная почта обязательна',
+            {...register("username", {
+              required: "Электронная почта обязательна",
               pattern: emailPattern,
             })}
             placeholder="Электронная почта"
@@ -105,17 +104,17 @@ function Login() {
               <IconButton
                 variant="ghost"
                 onClick={setShow.toggle}
-                aria-label={show ? 'Hide password' : 'Show password'}
+                aria-label={show ? "Hide password" : "Show password"}
               >
                 {show ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
               </IconButton>
             }
           >
             <Input
-              {...register('password', {
-                required: 'Пароль обязательный',
+              {...register("password", {
+                required: "Пароль обязательный",
               })}
-              type={show ? 'text' : 'password'}
+              type={show ? "text" : "password"}
               placeholder="Пароль"
               required
             />
@@ -157,12 +156,12 @@ function Login() {
           Войти
         </Button>
         <Text>
-          Нет аккаунта?{' '}
+          Нет аккаунта?{" "}
           <Link as={RouterLink} href="/signup" color="blue.500">
             Зарегистрироваться
           </Link>
         </Text>
       </Container>
     </>
-  )
+  );
 }

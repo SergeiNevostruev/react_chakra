@@ -5,7 +5,7 @@ const Header = () => {
   return (
     <Box as={"footer"}>
       <Flex gap="4" justify="flex-start">
-        <Image src={Logo} alt="Logo" w="180px" maxW="2xs" p={6} />
+        <Image src={Logo} alt="Logo" w="280px" maxW="2xs" p={6} />
       </Flex>
       <Separator />
     </Box>

@@ -14,6 +14,9 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
+import { Route as authSignupImport } from './routes/(auth)/signup'
+import { Route as authResetPasswordImport } from './routes/(auth)/reset-password'
+import { Route as authRecoverPasswordImport } from './routes/(auth)/recover-password'
 import { Route as authLoginImport } from './routes/(auth)/login'
 
 // Create Virtual Routes
@@ -115,6 +118,24 @@ const demoAboutLazyRoute = demoAboutLazyImport
   } as any)
   .lazy(() => import('./routes/(demo)/about.lazy').then((d) => d.Route))
 
+const authSignupRoute = authSignupImport.update({
+  id: '/(auth)/signup',
+  path: '/signup',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authResetPasswordRoute = authResetPasswordImport.update({
+  id: '/(auth)/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const authRecoverPasswordRoute = authRecoverPasswordImport.update({
+  id: '/(auth)/recover-password',
+  path: '/recover-password',
+  getParentRoute: () => rootRoute,
+} as any)
+
 const authLoginRoute = authLoginImport.update({
   id: '/(auth)/login',
   path: '/login',
@@ -137,6 +158,27 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof authLoginImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/recover-password': {
+      id: '/(auth)/recover-password'
+      path: '/recover-password'
+      fullPath: '/recover-password'
+      preLoaderRoute: typeof authRecoverPasswordImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/reset-password': {
+      id: '/(auth)/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof authResetPasswordImport
+      parentRoute: typeof rootRoute
+    }
+    '/(auth)/signup': {
+      id: '/(auth)/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof authSignupImport
       parentRoute: typeof rootRoute
     }
     '/(demo)/about': {
@@ -249,6 +291,9 @@ const LayoutRouteWithChildren =
 export interface FileRoutesByFullPath {
   '': typeof LayoutRouteWithChildren
   '/login': typeof authLoginRoute
+  '/recover-password': typeof authRecoverPasswordRoute
+  '/reset-password': typeof authResetPasswordRoute
+  '/signup': typeof authSignupRoute
   '/about': typeof demoAboutLazyRoute
   '/index1': typeof demoIndex1LazyRoute
   '/reducer': typeof demoReducerLazyRoute
@@ -264,6 +309,9 @@ export interface FileRoutesByFullPath {
 
 export interface FileRoutesByTo {
   '/login': typeof authLoginRoute
+  '/recover-password': typeof authRecoverPasswordRoute
+  '/reset-password': typeof authResetPasswordRoute
+  '/signup': typeof authSignupRoute
   '/about': typeof demoAboutLazyRoute
   '/index1': typeof demoIndex1LazyRoute
   '/reducer': typeof demoReducerLazyRoute
@@ -281,6 +329,9 @@ export interface FileRoutesById {
   __root__: typeof rootRoute
   '/_layout': typeof LayoutRouteWithChildren
   '/(auth)/login': typeof authLoginRoute
+  '/(auth)/recover-password': typeof authRecoverPasswordRoute
+  '/(auth)/reset-password': typeof authResetPasswordRoute
+  '/(auth)/signup': typeof authSignupRoute
   '/(demo)/about': typeof demoAboutLazyRoute
   '/(demo)/index1': typeof demoIndex1LazyRoute
   '/(demo)/reducer': typeof demoReducerLazyRoute
@@ -299,6 +350,9 @@ export interface FileRouteTypes {
   fullPaths:
     | ''
     | '/login'
+    | '/recover-password'
+    | '/reset-password'
+    | '/signup'
     | '/about'
     | '/index1'
     | '/reducer'
@@ -313,6 +367,9 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
+    | '/recover-password'
+    | '/reset-password'
+    | '/signup'
     | '/about'
     | '/index1'
     | '/reducer'
@@ -328,6 +385,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_layout'
     | '/(auth)/login'
+    | '/(auth)/recover-password'
+    | '/(auth)/reset-password'
+    | '/(auth)/signup'
     | '/(demo)/about'
     | '/(demo)/index1'
     | '/(demo)/reducer'
@@ -345,6 +405,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   LayoutRoute: typeof LayoutRouteWithChildren
   authLoginRoute: typeof authLoginRoute
+  authRecoverPasswordRoute: typeof authRecoverPasswordRoute
+  authResetPasswordRoute: typeof authResetPasswordRoute
+  authSignupRoute: typeof authSignupRoute
   demoAboutLazyRoute: typeof demoAboutLazyRoute
   demoIndex1LazyRoute: typeof demoIndex1LazyRoute
   demoReducerLazyRoute: typeof demoReducerLazyRoute
@@ -353,6 +416,9 @@ export interface RootRouteChildren {
 const rootRouteChildren: RootRouteChildren = {
   LayoutRoute: LayoutRouteWithChildren,
   authLoginRoute: authLoginRoute,
+  authRecoverPasswordRoute: authRecoverPasswordRoute,
+  authResetPasswordRoute: authResetPasswordRoute,
+  authSignupRoute: authSignupRoute,
   demoAboutLazyRoute: demoAboutLazyRoute,
   demoIndex1LazyRoute: demoIndex1LazyRoute,
   demoReducerLazyRoute: demoReducerLazyRoute,
@@ -370,6 +436,9 @@ export const routeTree = rootRoute
       "children": [
         "/_layout",
         "/(auth)/login",
+        "/(auth)/recover-password",
+        "/(auth)/reset-password",
+        "/(auth)/signup",
         "/(demo)/about",
         "/(demo)/index1",
         "/(demo)/reducer"
@@ -390,6 +459,15 @@ export const routeTree = rootRoute
     },
     "/(auth)/login": {
       "filePath": "(auth)/login.tsx"
+    },
+    "/(auth)/recover-password": {
+      "filePath": "(auth)/recover-password.tsx"
+    },
+    "/(auth)/reset-password": {
+      "filePath": "(auth)/reset-password.tsx"
+    },
+    "/(auth)/signup": {
+      "filePath": "(auth)/signup.tsx"
     },
     "/(demo)/about": {
       "filePath": "(demo)/about.lazy.tsx"
