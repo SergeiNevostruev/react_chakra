@@ -1,10 +1,11 @@
-import * as React from 'react'
-import { createLazyFileRoute } from '@tanstack/react-router'
+import * as React from "react";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import TestTabs from "@/components/elements/Test/TestTabs";
 
-export const Route = createLazyFileRoute('/_layout/test')({
+export const Route = createLazyFileRoute("/_layout/test")({
   component: RouteComponent,
-})
+});
 
 function RouteComponent() {
-  return <div>Hello "/_layout/test"!</div>
+  return <TestTabs />;
 }

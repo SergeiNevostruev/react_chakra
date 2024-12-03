@@ -47,9 +47,7 @@ const SidebarItems = ({ onClose }: SidebarItemsProps) => {
           },
         }}
       >
-        <Box asChild alignSelf={"center"}>
-          {icon}
-        </Box>
+        <Box alignSelf={"center"}>{icon}</Box>
         <Text ml={2}>{title}</Text>
       </Link>
     </Flex>

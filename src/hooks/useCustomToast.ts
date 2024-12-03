@@ -1,23 +1,23 @@
-import { toaster } from '@/components/ui/toaster';
-import { useCallback } from 'react';
-
+import { toaster } from "@/components/ui/toaster";
+import { useCallback } from "react";
 
 const useCustomToast = () => {
-
-  const showToast = useCallback((title: string, description: string, status: "success" | "error") =>  {
+  const showToast = (
+    title: string,
+    description: string,
+    status: "success" | "error"
+  ) => {
     toaster.create({
       title,
-      description, 
+      description,
       type: status,
       action: {
         label: "x",
-        onClick: () => {          
-        }
-      }
-    })
-  }, [])
+        onClick: () => {},
+      },
+    });
+  };
+  return showToast;
+};
 
-  return showToast
-}
-
-export default useCustomToast
+export default useCustomToast;

@@ -5,6 +5,7 @@ import Sidebar from "@/components/elements/Common/Sidebar";
 import UserMenu from "@/components/elements/Common/UserMenu";
 import Header from "@/components/elements/Common/Header";
 import Footer from "@/components/elements/Common/Footer";
+import { Toaster } from "@/components/ui/toaster";
 
 export const Route = createFileRoute("/_layout")({
   component: Layout,
@@ -34,6 +35,7 @@ function Layout() {
         )}
         <UserMenu />
       </Flex>
+      <Toaster />
       <Footer />
     </Flex>
   );

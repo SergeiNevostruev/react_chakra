@@ -18,7 +18,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { InputGroup } from "@/components/ui/input-group";
-import Logo from "@/assets/fastapi-logo.svg";
+import Logo from "@/assets/logo.svg";
 import { emailPattern } from "@/utils";
 import { Button } from "@/components/ui/button";
 
