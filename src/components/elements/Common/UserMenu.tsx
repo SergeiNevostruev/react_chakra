@@ -49,9 +49,9 @@ const UserMenu = () => {
           </MenuTrigger>
           <MenuContent>
             <MenuItem asChild value="My profile">
-              <Link to={"/settings"}>
+              <Link to={"/"}>
                 <FiUser fontSize="18px" />
-                Профиль
+                Домой
               </Link>
             </MenuItem>
             <MenuItem

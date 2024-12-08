@@ -14,6 +14,7 @@ import { createFileRoute } from '@tanstack/react-router'
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as LayoutImport } from './routes/_layout'
+import { Route as LayoutItemsImport } from './routes/_layout/items'
 import { Route as authSignupImport } from './routes/(auth)/signup'
 import { Route as authResetPasswordImport } from './routes/(auth)/reset-password'
 import { Route as authRecoverPasswordImport } from './routes/(auth)/recover-password'
@@ -25,7 +26,6 @@ const LayoutIndexLazyImport = createFileRoute('/_layout/')()
 const LayoutTestLazyImport = createFileRoute('/_layout/test')()
 const LayoutSettingsLazyImport = createFileRoute('/_layout/settings')()
 const LayoutProjectLazyImport = createFileRoute('/_layout/project')()
-const LayoutItemsLazyImport = createFileRoute('/_layout/items')()
 const LayoutCurrentUserLazyImport = createFileRoute('/_layout/current-user')()
 const LayoutAppsLazyImport = createFileRoute('/_layout/apps')()
 const LayoutAdminLazyImport = createFileRoute('/_layout/admin')()
@@ -67,12 +67,6 @@ const LayoutProjectLazyRoute = LayoutProjectLazyImport.update({
 } as any).lazy(() =>
   import('./routes/_layout/project.lazy').then((d) => d.Route),
 )
-
-const LayoutItemsLazyRoute = LayoutItemsLazyImport.update({
-  id: '/items',
-  path: '/items',
-  getParentRoute: () => LayoutRoute,
-} as any).lazy(() => import('./routes/_layout/items.lazy').then((d) => d.Route))
 
 const LayoutCurrentUserLazyRoute = LayoutCurrentUserLazyImport.update({
   id: '/current-user',
@@ -117,6 +111,12 @@ const demoAboutLazyRoute = demoAboutLazyImport
     getParentRoute: () => rootRoute,
   } as any)
   .lazy(() => import('./routes/(demo)/about.lazy').then((d) => d.Route))
+
+const LayoutItemsRoute = LayoutItemsImport.update({
+  id: '/items',
+  path: '/items',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 const authSignupRoute = authSignupImport.update({
   id: '/(auth)/signup',
@@ -181,6 +181,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof authSignupImport
       parentRoute: typeof rootRoute
     }
+    '/_layout/items': {
+      id: '/_layout/items'
+      path: '/items'
+      fullPath: '/items'
+      preLoaderRoute: typeof LayoutItemsImport
+      parentRoute: typeof LayoutImport
+    }
     '/(demo)/about': {
       id: '/(demo)/about'
       path: '/about'
@@ -223,13 +230,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutCurrentUserLazyImport
       parentRoute: typeof LayoutImport
     }
-    '/_layout/items': {
-      id: '/_layout/items'
-      path: '/items'
-      fullPath: '/items'
-      preLoaderRoute: typeof LayoutItemsLazyImport
-      parentRoute: typeof LayoutImport
-    }
     '/_layout/project': {
       id: '/_layout/project'
       path: '/project'
@@ -264,10 +264,10 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface LayoutRouteChildren {
+  LayoutItemsRoute: typeof LayoutItemsRoute
   LayoutAdminLazyRoute: typeof LayoutAdminLazyRoute
   LayoutAppsLazyRoute: typeof LayoutAppsLazyRoute
   LayoutCurrentUserLazyRoute: typeof LayoutCurrentUserLazyRoute
-  LayoutItemsLazyRoute: typeof LayoutItemsLazyRoute
   LayoutProjectLazyRoute: typeof LayoutProjectLazyRoute
   LayoutSettingsLazyRoute: typeof LayoutSettingsLazyRoute
   LayoutTestLazyRoute: typeof LayoutTestLazyRoute
@@ -275,10 +275,10 @@ interface LayoutRouteChildren {
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutItemsRoute: LayoutItemsRoute,
   LayoutAdminLazyRoute: LayoutAdminLazyRoute,
   LayoutAppsLazyRoute: LayoutAppsLazyRoute,
   LayoutCurrentUserLazyRoute: LayoutCurrentUserLazyRoute,
-  LayoutItemsLazyRoute: LayoutItemsLazyRoute,
   LayoutProjectLazyRoute: LayoutProjectLazyRoute,
   LayoutSettingsLazyRoute: LayoutSettingsLazyRoute,
   LayoutTestLazyRoute: LayoutTestLazyRoute,
@@ -294,13 +294,13 @@ export interface FileRoutesByFullPath {
   '/recover-password': typeof authRecoverPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/signup': typeof authSignupRoute
+  '/items': typeof LayoutItemsRoute
   '/about': typeof demoAboutLazyRoute
   '/index1': typeof demoIndex1LazyRoute
   '/reducer': typeof demoReducerLazyRoute
   '/admin': typeof LayoutAdminLazyRoute
   '/apps': typeof LayoutAppsLazyRoute
   '/current-user': typeof LayoutCurrentUserLazyRoute
-  '/items': typeof LayoutItemsLazyRoute
   '/project': typeof LayoutProjectLazyRoute
   '/settings': typeof LayoutSettingsLazyRoute
   '/test': typeof LayoutTestLazyRoute
@@ -312,13 +312,13 @@ export interface FileRoutesByTo {
   '/recover-password': typeof authRecoverPasswordRoute
   '/reset-password': typeof authResetPasswordRoute
   '/signup': typeof authSignupRoute
+  '/items': typeof LayoutItemsRoute
   '/about': typeof demoAboutLazyRoute
   '/index1': typeof demoIndex1LazyRoute
   '/reducer': typeof demoReducerLazyRoute
   '/admin': typeof LayoutAdminLazyRoute
   '/apps': typeof LayoutAppsLazyRoute
   '/current-user': typeof LayoutCurrentUserLazyRoute
-  '/items': typeof LayoutItemsLazyRoute
   '/project': typeof LayoutProjectLazyRoute
   '/settings': typeof LayoutSettingsLazyRoute
   '/test': typeof LayoutTestLazyRoute
@@ -332,13 +332,13 @@ export interface FileRoutesById {
   '/(auth)/recover-password': typeof authRecoverPasswordRoute
   '/(auth)/reset-password': typeof authResetPasswordRoute
   '/(auth)/signup': typeof authSignupRoute
+  '/_layout/items': typeof LayoutItemsRoute
   '/(demo)/about': typeof demoAboutLazyRoute
   '/(demo)/index1': typeof demoIndex1LazyRoute
   '/(demo)/reducer': typeof demoReducerLazyRoute
   '/_layout/admin': typeof LayoutAdminLazyRoute
   '/_layout/apps': typeof LayoutAppsLazyRoute
   '/_layout/current-user': typeof LayoutCurrentUserLazyRoute
-  '/_layout/items': typeof LayoutItemsLazyRoute
   '/_layout/project': typeof LayoutProjectLazyRoute
   '/_layout/settings': typeof LayoutSettingsLazyRoute
   '/_layout/test': typeof LayoutTestLazyRoute
@@ -353,13 +353,13 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/signup'
+    | '/items'
     | '/about'
     | '/index1'
     | '/reducer'
     | '/admin'
     | '/apps'
     | '/current-user'
-    | '/items'
     | '/project'
     | '/settings'
     | '/test'
@@ -370,13 +370,13 @@ export interface FileRouteTypes {
     | '/recover-password'
     | '/reset-password'
     | '/signup'
+    | '/items'
     | '/about'
     | '/index1'
     | '/reducer'
     | '/admin'
     | '/apps'
     | '/current-user'
-    | '/items'
     | '/project'
     | '/settings'
     | '/test'
@@ -388,13 +388,13 @@ export interface FileRouteTypes {
     | '/(auth)/recover-password'
     | '/(auth)/reset-password'
     | '/(auth)/signup'
+    | '/_layout/items'
     | '/(demo)/about'
     | '/(demo)/index1'
     | '/(demo)/reducer'
     | '/_layout/admin'
     | '/_layout/apps'
     | '/_layout/current-user'
-    | '/_layout/items'
     | '/_layout/project'
     | '/_layout/settings'
     | '/_layout/test'
@@ -447,10 +447,10 @@ export const routeTree = rootRoute
     "/_layout": {
       "filePath": "_layout.tsx",
       "children": [
+        "/_layout/items",
         "/_layout/admin",
         "/_layout/apps",
         "/_layout/current-user",
-        "/_layout/items",
         "/_layout/project",
         "/_layout/settings",
         "/_layout/test",
@@ -468,6 +468,10 @@ export const routeTree = rootRoute
     },
     "/(auth)/signup": {
       "filePath": "(auth)/signup.tsx"
+    },
+    "/_layout/items": {
+      "filePath": "_layout/items.tsx",
+      "parent": "/_layout"
     },
     "/(demo)/about": {
       "filePath": "(demo)/about.lazy.tsx"
@@ -488,10 +492,6 @@ export const routeTree = rootRoute
     },
     "/_layout/current-user": {
       "filePath": "_layout/current-user.lazy.tsx",
-      "parent": "/_layout"
-    },
-    "/_layout/items": {
-      "filePath": "_layout/items.lazy.tsx",
       "parent": "/_layout"
     },
     "/_layout/project": {

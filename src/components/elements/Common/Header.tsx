@@ -11,8 +11,11 @@ import { SegmentedControl } from "@/components/ui/segmented-control";
 import { toaster } from "@/components/ui/toaster";
 
 const Header = () => {
+  // Нужна общая авторизация + датаархив в контейстным поиском + датакаталог
+  // Еще бы вики и портал для клиентов
   const items = [
-    "Общие настройки",
+    "Общее",
+    "Портал",
     "BI",
     "DWH",
     "AI",
@@ -20,6 +23,8 @@ const Header = () => {
     "Формы ввода",
     "Работа с шаблонами",
     "Интеграции",
+    "Дата-майнинг",
+    "Архив",
   ];
 
   // const toaster = useCustomToast();
