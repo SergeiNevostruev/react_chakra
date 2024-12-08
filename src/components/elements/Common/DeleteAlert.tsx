@@ -1,18 +1,26 @@
-import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
-} from "@chakra-ui/react";
+import {} from // AlertDialog,
+// AlertDialogBody,
+// AlertDialogContent,
+// AlertDialogFooter,
+// AlertDialogHeader,
+// AlertDialogOverlay,
+// Button,
+"@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import React from "react";
 import { useForm } from "react-hook-form";
 
 import { ItemsService, UsersService } from "@/client";
 import useCustomToast from "@/hooks/useCustomToast";
+import { Button } from "@/components/ui/button";
+import {
+  DialogBody,
+  DialogCloseTrigger,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogRoot,
+} from "@/components/ui/dialog";
 
 interface DeleteProps {
   type: string;
@@ -70,42 +78,37 @@ const Delete = ({ type, id, isOpen, onClose }: DeleteProps) => {
 
   return (
     <>
-      <AlertDialog
-        isOpen={isOpen}
-        onClose={onClose}
-        leastDestructiveRef={cancelRef}
+      <DialogRoot
+        open={isOpen}
+        onOpenChange={onClose}
+        // leastDestructiveRef={cancelRef}
         size={{ base: "sm", md: "md" }}
-        isCentered
+        // isCentered
       >
-        <AlertDialogOverlay>
-          <AlertDialogContent as="form" onSubmit={handleSubmit(onSubmit)}>
-            <AlertDialogHeader>Delete {type}</AlertDialogHeader>
+        <DialogContent as="form" onSubmit={handleSubmit(onSubmit)}>
+          <DialogHeader>Delete {type}</DialogHeader>
 
-            <AlertDialogBody>
-              {type === "User" && (
-                <span>
-                  All items associated with this user will also be{" "}
-                  <strong>permantly deleted. </strong>
-                </span>
-              )}
-              Are you sure? You will not be able to undo this action.
-            </AlertDialogBody>
+          <DialogBody>
+            {type === "User" && (
+              <span>
+                Все элементы, связанные с этим пользователем, также будут{" "}
+                <strong>далены безвозвратно. </strong>
+              </span>
+            )}
+            Вы уверены? Вы не сможете отменить это действие.
+          </DialogBody>
 
-            <AlertDialogFooter gap={3}>
-              <Button variant="danger" type="submit" isLoading={isSubmitting}>
-                Delete
-              </Button>
-              <Button
-                ref={cancelRef}
-                onClick={onClose}
-                isDisabled={isSubmitting}
-              >
-                Cancel
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+          <DialogFooter gap={3}>
+            <Button variant="surface" type="submit" loading={isSubmitting}>
+              Удалить навсегда
+            </Button>
+            <Button ref={cancelRef} onClick={onClose} disabled={isSubmitting}>
+              Отмена
+            </Button>
+          </DialogFooter>
+          <DialogCloseTrigger onClick={onClose} />
+        </DialogContent>
+      </DialogRoot>
     </>
   );
 };

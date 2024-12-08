@@ -18,6 +18,8 @@ import {
 
 import type { ItemPublic, UserPublic } from "@/client";
 import EditItem from "../Items/EditItem";
+import Delete from "./DeleteAlert";
+import EditUser from "../Admin/EditUser";
 // import EditUser from "../Admin/EditUser";
 // import EditItem from "../Items/EditItem";
 // import Delete from "./DeleteAlert";
@@ -52,25 +54,25 @@ const ActionsMenu = ({ type, value, disabled }: ActionsMenuProps) => {
             <FiTrash fontSize="16px" /> Удалить {type}
           </MenuItem>
         </MenuContent>
-        {/* {type === "User" ? (
+        {type === "User" ? (
           <EditUser
             user={value as UserPublic}
             isOpen={editUserModal.open}
             onClose={editUserModal.onClose}
           />
-        ) : ( */}
-        <EditItem
-          item={value as ItemPublic}
-          isOpen={editUserModal.open}
-          onClose={editUserModal.onClose}
-        />
-        {/* )}
+        ) : (
+          <EditItem
+            item={value as ItemPublic}
+            isOpen={editUserModal.open}
+            onClose={editUserModal.onClose}
+          />
+        )}
         <Delete
           type={type}
           id={value.id}
           isOpen={deleteModal.open}
           onClose={deleteModal.onClose}
-        /> */}
+        />
       </MenuRoot>
     </>
   );
